@@ -1,6 +1,6 @@
-# Next JS with React Query Template
+# Users List Test Task
 
-This is a template for creating Next JS (app directory) app with React Query for fetching data
+This is a Next JS (app directory) app with React Query for fetching data
 
 ## Technologies Used
 
