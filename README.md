@@ -11,9 +11,6 @@ This is a template for creating Next JS (app directory) app with React Query for
 
 ## How To Use
 
-For use this template to create Next JS App you can following commands:
-
-
 ## Scripts
 
 ### Starts the development server
