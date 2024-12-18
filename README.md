@@ -19,19 +19,14 @@ For use this template to create Next JS App you can following commands:
 ### Starts the development server
 
 ```bash
+yarn install
+or
+pnpm install
+
+
 yarn dev
-```
-
-### Builds the app for production
-
-```bash
-yarn build
-```
-
-### Runs the built app in production mode
-
-```bash
-yarn start
+or
+pnpm dev
 ```
 
 

@@ -11,13 +11,13 @@ export const useUsers = () => {
   const {data} = useQuery({
     queryKey: getUsersKey(),
     queryFn: getUsers,
-    select: (data: User[]) => data.map((user) => ({ ...user, name: user.firstName + ' ' + user.lastName }))
+    select: (data: User[]) => data.map((user) => ({ ...user, name: user.firstName + ' ' + user.lastName })).reverse()
   });
 
   return data;
 };
 
-type NewUser = Pick<User, 'firstName' | 'lastName' | 'createdAt'>;
+export type NewUser = Pick<User, 'firstName' | 'lastName' | 'createdAt'>;
 
 export const useAddUser = () => {
   const queryClient = useQueryClient();

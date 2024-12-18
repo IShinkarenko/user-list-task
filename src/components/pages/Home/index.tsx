@@ -1,54 +1,23 @@
-/**
- * ! Example for use react query on client component using hydrate from server
- */
 'use client';
 
-import { useUsers, useAddUser } from '@/hooks/useUsers';
-
-import { useState } from 'react';
-
-interface ButtonProps {
-  onClick?: () => void;
-  children: React.ReactNode;
-  className?: string;
-}
-
-const Button = ({ onClick, children, className = '' }: ButtonProps) => {
-  return (
-    <button
-      onClick={onClick}
-      className={`min-h-[32px] px-3 py-1.5 flex items-center gap-2 rounded-md
-        bg-gradient-to-b from-[#47ACD7] to-[#3671C9] text-white
-        hover:brightness-95
-        focus:shadow-[0px_0px_0px_3px_#7FBDD966] focus:outline-none
-        active:bg-[linear-gradient(180deg,_#47ACD7_0%,_#3671C9_100%),_linear-gradient(0deg,_rgba(0,_0,_0,_0.3),_rgba(0,_0,_0,_0.3))]
-        transition-all duration-200 ${className}`}
-    >
-      {children}
-    </button>
-  );
-};
+import AddUserModal from '@/components/add-user';
+import { Button } from '@/components/button';
+import { UserListItem } from '@/components/user-list-item';
+import { useUsers, useAddUser, NewUser } from '@/hooks/useUsers';
+import { useState, useCallback } from 'react';
 
 const Home = () => {
   const users = useUsers();
   const addUserMutation = useAddUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newUser, setNewUser] = useState({ firstName: '', lastName: '' });
 
-  // Generate random color for avatar background
-  const getRandomColor = () => {
-    const colors = ['purple', 'pink', 'blue', 'green', 'yellow', 'red'];
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
-
-  // Generate initials from name
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(part => part[0])
-      .join('')
-      .toUpperCase();
-  };
+  const addNewUser = useCallback(
+    (data: NewUser) => {
+      addUserMutation.mutate(data);
+      setIsModalOpen(false);
+    },
+    [addUserMutation]
+  );
 
   return (
     <div className='p-4'>
@@ -71,8 +40,6 @@ const Home = () => {
       </div>
 
       <div className='relative mb-16'>
-        <div className='absolute -top-10 -left-10 w-20 h-20 bg-purple-100 rounded-full blur-xl opacity-60 animate-pulse'></div>
-        <div className='absolute -bottom-10 -right-10 w-20 h-20 bg-pink-100 rounded-full blur-xl opacity-60 animate-pulse'></div>
         <div className='bg-white/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300'>
           <div className='flex items-center justify-between mb-8'>
             <div className='flex items-center gap-4'>
@@ -104,90 +71,17 @@ const Home = () => {
 
           <ul role='list' className='divide-y divide-gray-100'>
             {users?.map(user => (
-              <li
-                key={user.id}
-                className='flex justify-between gap-x-6 py-5 hover:bg-gray-50/50 rounded-lg transition-all duration-300 hover:translate-x-2'
-              >
-                <div className='flex min-w-0 gap-x-4'>
-                  <div
-                    className={`size-12 flex-none rounded-full bg-${getRandomColor()}-100 ring-2 ring-${getRandomColor()}-500/20 flex items-center justify-center font-semibold text-${getRandomColor()}-700 hover:rotate-12 transition-transform duration-300`}
-                  >
-                    {getInitials(user.name)}
-                  </div>
-                  <div className='min-w-0 flex-auto'>
-                    <p className='text-sm/6 font-semibold text-gray-900'>
-                      {user.name}
-                    </p>
-                    <p className='mt-1 truncate text-xs/5 text-gray-500'>
-                      ID: {user.id}
-                    </p>
-                  </div>
-                </div>
-                <div className='hidden shrink-0 sm:flex sm:flex-col sm:items-end'>
-                  <div className='mt-1 flex items-center gap-x-1.5'>
-                    <div className='flex-none rounded-full bg-emerald-500/20 p-1 animate-pulse'>
-                      <div className='size-1.5 rounded-full bg-emerald-500'></div>
-                    </div>
-                    <p className='text-xs/5 text-gray-500'>Active</p>
-                  </div>
-                </div>
-              </li>
+              <UserListItem key={user.id} id={user.id} name={user.name} />
             ))}
           </ul>
         </div>
       </div>
 
       {isModalOpen && (
-        <div className='fixed inset-0 bg-black/50 flex items-center justify-center backdrop-blur-sm animate-fadeIn'>
-          <div className='bg-white rounded-xl p-6 w-full max-w-md animate-slideIn'>
-            <div className='flex items-center gap-3 mb-6'>
-              <h3 className='text-lg font-semibold'>Add New User</h3>
-            </div>
-            <div className='space-y-4'>
-              <div>
-                <label className='block text-[#76767D] font-inter text-[14px] font-semibold leading-[18.2px] tracking-[-0.005em] mb-1'>
-                  First Name
-                </label>
-                <input
-                  type='text'
-                  value={newUser.firstName}
-                  onChange={e =>
-                    setNewUser({ ...newUser, firstName: e.target.value })
-                  }
-                  className='w-[400px] h-[36px] min-h-[36px] px-3 py-2 bg-white border border-[#DDDDE1] rounded-lg focus:outline-none focus:shadow-[0px_0px_0px_3px_#7FBDD966] transition-all duration-300'
-                />
-              </div>
-              <div>
-                <label className='block text-[#76767D] font-inter text-[14px] font-semibold leading-[18.2px] tracking-[-0.005em] mb-1'>
-                  Last Name
-                </label>
-                <input
-                  type='text'
-                  value={newUser.lastName}
-                  onChange={e =>
-                    setNewUser({ ...newUser, lastName: e.target.value })
-                  }
-                  className='w-[400px] h-[36px] min-h-[36px] px-3 py-2 bg-white border border-[#DDDDE1] rounded-lg focus:outline-none focus:shadow-[0px_0px_0px_3px_#7FBDD966] transition-all duration-300'
-                />
-              </div>
-              <div className='flex justify-end gap-3 mt-6'>
-                <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
-                <Button
-                  onClick={() => {
-                    addUserMutation.mutate({
-                      firstName: newUser.firstName,
-                      lastName: newUser.lastName,
-                      createdAt: new Date().toISOString()
-                    });
-                    setIsModalOpen(false);
-                  }}
-                >
-                  Add User
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <AddUserModal
+          onSubmit={addNewUser}
+          onClose={() => setIsModalOpen(false)}
+        />
       )}
     </div>
   );
