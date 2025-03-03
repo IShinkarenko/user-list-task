@@ -15,7 +15,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         <Providers>
           <BackgroundPatterns />
 
-          <main className='mx-auto max-w-[1170px] min-h-screen px-[15px] relative z-10'>
+          <main className='relative z-10 mx-auto max-w-[1170px] min-h-screen px-[15px]'>
             {children}
           </main>
         </Providers>
