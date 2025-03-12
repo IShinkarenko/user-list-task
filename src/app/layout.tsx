@@ -10,7 +10,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang='en'>
       <body
-        className={`${inter.variable} min-h-screen bg-gradient-to-br from-[#fefaff] via-[#fefcff] to-[#fdfdff]`}
+        className={`${inter.variable} bg-gradient-to-br min-h-screen from-[#fefaff] via-[#fefcff] to-[#fdfdff]`}
       >
         <Providers>
           <BackgroundPatterns />
